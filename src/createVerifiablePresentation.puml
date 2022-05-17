@@ -1,0 +1,39 @@
+@startuml createVerifiablePresentation
+
+title  Create Verifiable Presentation\n
+
+start
+:Input **ICreateVerifiablePresentationArgs**;
+note right
+{
+    holder: string
+    verifiableCredential?: W3CVerifiableCredential[],
+    type?: string[],
+    '@context'?: string[],
+    verifier?: string[],
+    issuanceDate?: DateType,
+    expirationDate?: DateType,
+    id?: string,
+
+    [x: string]: any
+}
+end note
+:Extract **holder DID** (string) from **ICreateVerifiablePresentationArgs**;
+:Get **holder DID**;
+note right
+  * Holder DID contains key to sign
+  * Holder DID is retrieved from DIDStore
+end note
+partition CreateJWT {
+  :Create JSON web signature (JWS);
+  note right
+    * Content to create **JWS** consists of **encoded credential payload**
+    * Use private key from **Holder DID** to sign
+  end note
+  :Return JWT;
+}
+
+:Normalize created JWT to W3C presentation format;
+stop
+
+@enduml

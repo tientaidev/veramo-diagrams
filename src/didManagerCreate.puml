@@ -1,0 +1,20 @@
+@startuml didManagerCreate
+
+title  Create a DID\n
+
+start
+  :Input **IDIDManagerCreateArgs**;
+  note right
+    {
+      alias?: string
+      provider?: string
+      kms?: string
+      options?: string
+    }
+  end note
+  :create Secp256k1 key;
+  :create an Identifer based on the key;
+  :set Identifer alias given from args;
+  :save created Identifer;
+stop
+

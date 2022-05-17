@@ -1,0 +1,44 @@
+@startuml verifyPresentation
+
+title  Verify Verifiable Presentation\n
+
+start
+  :Input **IVerifyPresentationArgs**;
+  note right
+  {
+    **presentation**: W3CVerifiablePresentation,
+    challenge?: string,
+    domain?: string,
+    fetchRemoteContexts?: boolean,
+    [x: string]: any
+  }
+  end note
+  :Get **jwt** from **IVerifyPresentationArgs.presentation.proof.jwt**;
+  partition DecodeJWT {
+    :Decode jws;
+    :Return **{payload, header, signature, data }**;
+  }
+  partition ResolveDID {
+    :Get **issuer DID** (string) from **payload**;
+    :Resolve **issuer DID**;
+    :Return **{ didResolutionResult, authenticators, issuer }**;
+  }
+  partition VerifyJWSDecoded {
+    :Verify;
+    note right
+      * **Authenticators** contain list of public keys that Issuer can use to sign
+      * Check if public keys in **authenticators** match public key that signed JWS
+    end note
+  }
+  :Normalize credential;
+  :Validate credential payload;
+  note right
+    * Validate @context
+    * Vaidate Vc type
+    * Validate credential Subject (length > 0)
+    * Validate issuance Date
+    * Validate expiration Date
+  end note
+stop
+
+@enduml
