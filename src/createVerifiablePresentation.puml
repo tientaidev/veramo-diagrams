@@ -6,6 +6,7 @@ start
 :Input **ICreateVerifiablePresentationArgs**;
 note right
 {
+  {
     holder: string
     verifiableCredential?: W3CVerifiableCredential[],
     type?: string[],
@@ -16,6 +17,12 @@ note right
     id?: string,
 
     [x: string]: any
+  },
+  save?: boolean,
+  challenge?: string,
+  domain?: string,
+  proofFormat: ProofFormat,
+  removeOriginalFields?: boolean
 }
 end note
 :Extract **holder DID** (string) from **ICreateVerifiablePresentationArgs**;
